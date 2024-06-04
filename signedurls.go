@@ -81,7 +81,7 @@ func (s *Signed) Match(r *http.Request) bool {
 	modifiedQuery := modifiedURL.Query()
 	modifiedQuery.Del("token")
 	modifiedURL.RawQuery = modifiedQuery.Encode()
-	correctToken := generateToken(modifiedURL.String())
+	correctToken := generateToken(strings.Join([]string{s.Secret, modifiedURL.String()}, ""))
 	if token == correctToken {
 		// Token is correct!
 		return true
