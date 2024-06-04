@@ -5,7 +5,9 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
@@ -70,6 +72,19 @@ func (s *Signed) Match(r *http.Request) bool {
 	if token == "" {
 		// token not set, deny request
 		return false
+	}
+	expires := queryParameters.Get("expires")
+	if expires != "" {
+		// expires param is set
+		expiresTime, err := strconv.ParseInt(expires, 10, 64)
+		if err != nil {
+			// invalid "expires" param, can't be parsed as a number
+		} else {
+			if time.Now().Unix() > expiresTime {
+				// expiry time is in the past, deny access
+				return false
+			}
+		}
 	}
 	modifiedURL := r.URL
 	if r.TLS == nil {

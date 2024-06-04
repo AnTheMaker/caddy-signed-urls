@@ -14,12 +14,14 @@ respond "Error: Invalid Signature" 403
 To sign a URL, simply take
 - the secret key
 - the whole URL you want to request
-mesh them together, and SHA256-Hash it. Then append it as a URL parameter with the name ?token=
+mesh them together, and SHA256-Hash it. Then append it as a URL parameter with the name `?token=`
 
 Example: `SHA256(supersecretsigningkey + url)`
 
 That's it!
 
+## Bonus tip: Signed URLs that expire!
+Just add a `?expires=` query parameter to the URL with a valid UNIX timestamp of the date the URL should become invalid. Because it's part of the URL, it's included in the token-hash and can't be modified by others.
 
 
 > Todo: More Documentation
