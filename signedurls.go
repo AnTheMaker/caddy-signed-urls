@@ -19,8 +19,6 @@ func init() {
 	caddy.RegisterModule(Signed{})
 }
 
-// Middleware implements an HTTP handler that writes the
-// visitor's IP address to a file or stream.
 type Signed struct {
 	Secret string `json:"secret,omitempty"`
 	logger *zap.Logger
@@ -46,7 +44,6 @@ func (s *Signed) Validate() error {
 	return nil
 }
 
-// UnmarshalCaddyfile implements caddyfile.Unmarshaler.
 func (s *Signed) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
 		args := d.RemainingArgs()
@@ -64,24 +61,18 @@ func (s *Signed) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 func (s *Signed) Match(r *http.Request) bool {
 	queryParameters := r.URL.Query()
-	if queryParameters == nil {
-		// no query params set, deny request
+	if queryParameters == nil { // no query params set, deny request
 		return false
 	}
 	token := strings.ToLower(queryParameters.Get("token"))
-	if token == "" {
-		// token not set, deny request
+	if token == "" { // token not set, deny request
 		return false
 	}
 	expires := queryParameters.Get("expires")
-	if expires != "" {
-		// expires param is set
+	if expires != "" { // expires param is set
 		expiresTime, err := strconv.ParseInt(expires, 10, 64)
-		if err != nil {
-			// invalid "expires" param, can't be parsed as a number
-		} else {
-			if time.Now().Unix() > expiresTime {
-				// expiry time is in the past, deny access
+		if err == nil {
+			if time.Now().Unix() > expiresTime { // expiry time is in the past, deny access
 				return false
 			}
 		}
