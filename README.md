@@ -1,6 +1,12 @@
 # caddy-signed-urls
 A tiny Caddy Server Middleware adding support for Signed URLs. (under development, not ready for production use yet)
 
+# Install
+You can build Caddy bundled with this Plugin with the xcaddy tool:
+```
+xcaddy build --with github.com/anthemaker/caddy-signed-urls
+```
+
 ## How to use
 In your Caddyfile:
 ```
@@ -14,6 +20,7 @@ respond "Error: Invalid Signature" 403
 To sign a URL, simply take
 - the secret key
 - the whole URL you want to request
+
 mesh them together, and SHA256-Hash it. Then append it as a URL parameter with the name `?token=`
 
 Example: `SHA256(supersecretsigningkey + url)`
