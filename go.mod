@@ -1,4 +1,4 @@
-module github.com/AnTheMaker/caddy-signed-urls
+module github.com/anthemaker/caddy-signed-urls
 
 go 1.22.4
 
